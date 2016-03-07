@@ -1,4 +1,4 @@
-var verifyEmail = true;
+var verifyEmail = false;
 
 Accounts.config({sendVerificationEmail: verifyEmail});
 
@@ -114,6 +114,12 @@ Meteor.startup(function () {
 });
 
 Meteor.methods({
+  "checkUser" : function ( email ) {
+    if ( Accounts.findUserByEmail ( email ) ) {
+      throw new Meteor.Error ( 410, "User already exists" );
+    }
+  },
+
   "createUserAccount": function (options) {
     if (!Users.isAdmin(Meteor.userId())) {
       throw new Meteor.Error(403, "Access denied.");
@@ -191,6 +197,9 @@ Accounts.onCreateUser(function (options, user) {
 });
 
 Accounts.validateLoginAttempt(function (info) {
+  //if(Accounts.findUserByEmail(info.user.emails)) {
+  //  throw new Meteor.Error(410, "User already exists");
+  //}
 
   // reject users with role "blocked"
   if (info.user && Users.isInRole(info.user._id, "blocked")) {
