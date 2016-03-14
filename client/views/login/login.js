@@ -51,7 +51,7 @@ Template.Login.events ( {
         }
         else {
           console.log ( "Success: " + JSON.stringify ( res ) );
-          console.log ( JSON.stringify ( res.data.full_name ) );
+          //console.log ( JSON.stringify ( res.data.full_name ) );
           submit_button.button ( "loading" );
           Meteor.call ( 'checkUser', login_email, function ( err, res ) {
               if ( err ) {
@@ -68,7 +68,7 @@ Template.Login.events ( {
                 Accounts.createUser ( {
                   email    : login_email,
                   password : login_password,
-                  //profile  : { name : res.data.full_name }
+                  profile  : { name : (res.data ? res.data.full_name : "" ) }
                 }, function ( err ) {
                   submit_button.button ( "reset" );
                   if ( err ) {
